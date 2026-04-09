@@ -1,0 +1,177 @@
+repo_name: FRACTALS
+repo_type: math_reference_repo
+version: "0.1.0"
+status: seed
+
+primary_purpose:
+  - fractal taxonomy and classification
+  - recursion and self-similarity knowledge base
+  - formula and parameter reference
+  - generative art translation
+  - shader implementation translation
+  - AI prompt system support
+  - machine-readable datasets for tools and agents
+
+target_outputs:
+  - markdown_docs
+  - json_datasets
+  - csv_indexes
+  - prompt_modules
+  - shader_translation_notes
+  - parameter_presets
+
+audiences:
+  - generative artists
+  - shader developers
+  - AI prompt engineers
+  - researchers and educators
+  - tool builders and automation engineers
+
+priority_sections:
+  - 01_foundation
+  - 02_taxonomy
+  - 03_core_math
+  - 04_generation_methods
+  - 05_fractal_families
+  - 07_measurement_and_metrics
+  - 11_shader_and_genart_translation
+  - 14_structured_data
+  - 16_drift_control
+
+all_sections:
+  - folder: "00_meta"
+    purpose: "Repository manifest, conventions, and coverage targets"
+    status: complete
+  - folder: "01_foundation"
+    purpose: "Definitions, scope, core traits, use cases"
+    status: complete
+  - folder: "02_taxonomy"
+    purpose: "Family maps, named indexes, cross-reference tables"
+    status: complete
+  - folder: "03_core_math"
+    purpose: "Shared math foundations: iteration, scaling, complex dynamics"
+    status: complete
+  - folder: "04_generation_methods"
+    purpose: "How fractals are generated: escape-time, IFS, L-systems, etc."
+    status: planned
+  - folder: "05_fractal_families"
+    purpose: "Per-family documentation for all major fractal groups"
+    status: planned
+  - folder: "06_recursion_and_symbolic_systems"
+    purpose: "Rewrite rules, substitution systems, self-reference"
+    status: planned
+  - folder: "07_measurement_and_metrics"
+    purpose: "Hausdorff dimension, lacunarity, Lyapunov exponents, entropy"
+    status: planned
+  - folder: "08_dynamics_and_chaos"
+    purpose: "Bifurcation, attractors, stability, chaos vs. fractals"
+    status: planned
+  - folder: "09_visual_behavior"
+    purpose: "Visual properties: branching, filaments, fill/void, zoom"
+    status: planned
+  - folder: "10_rendering_and_coloring"
+    purpose: "Escape-time coloring, orbit traps, distance estimators, palettes"
+    status: planned
+  - folder: "11_shader_and_genart_translation"
+    purpose: "GLSL, p5.js, TouchDesigner implementations and control knobs"
+    status: planned
+  - folder: "12_prompt_system"
+    purpose: "Fractal-specific AI prompt formulas, modules, anti-drift"
+    status: planned
+  - folder: "13_app_and_system_integration"
+    purpose: "Schemas, presets, integration notes for tool builders"
+    status: planned
+  - folder: "14_structured_data"
+    purpose: "JSON/CSV master datasets for automation"
+    status: planned
+  - folder: "15_examples"
+    purpose: "Worked examples for prompts, shaders, and code"
+    status: planned
+  - folder: "16_drift_control"
+    purpose: "Scope enforcement, quality checklists, repair strategies"
+    status: planned
+  - folder: "17_research_backlog"
+    purpose: "Missing entries, open questions, future expansions"
+    status: planned
+
+record_template_fields:
+  required:
+    - name
+    - family
+    - generation_method
+    - core_rule
+    - equation
+    - visual_traits
+    - related_forms
+    - tags
+  recommended:
+    - aliases
+    - parameters
+    - dimensions
+    - recursion_type
+    - use_cases
+    - shader_notes
+    - prompt_tags
+    - references
+  optional:
+    - caveats
+    - animation_behavior
+    - historical_notes
+    - implementation_complexity
+
+fractal_families:
+  - complex_dynamics
+  - classical_geometric
+  - ifs
+  - l_system
+  - space_filling_curves
+  - strange_attractors
+  - stochastic
+  - 3d_fractals
+  - multifractals
+
+generation_methods:
+  - escape_time
+  - iterated_function_system
+  - l_system
+  - substitution
+  - recursive_geometry
+  - stochastic
+  - diffusion_limited_aggregation
+  - newton_iteration
+  - orbit_trap
+  - distance_estimation
+  - domain_coloring
+  - ode_integration
+
+anti_drift_goals:
+  - distinguish fractals from generic pattern language
+  - separate fractal family from generation method
+  - separate chaos systems from decorative approximation
+  - preserve practical implementation value for art and engineering
+  - prevent absorption of noise functions, tilings, sacred geometry without fractal dimension basis
+  - ensure every record has measurable or estimable fractal dimension data
+
+quality_criteria:
+  - every named fractal has a family assignment
+  - every named fractal has a generation method assignment
+  - every named fractal has at least estimated Hausdorff dimension
+  - every named fractal has at least 3 visual trait tags
+  - every family doc covers equation, parameters, visual traits, and related forms
+  - no entry uses purely decorative language without mathematical grounding
+
+data_formats:
+  markdown:
+    use_for: human-readable documentation
+    conventions: ATX headers, tables for structured data, code blocks for formulas
+  yaml:
+    use_for: manifests, configuration, structured metadata
+  json:
+    use_for: machine-readable records, schemas, formula libraries
+  csv:
+    use_for: indexes, cross-reference tables, dimension data
+
+repo_url: "https://github.com/fractals/fractals"
+license: "MIT"
+created: "2025-07-16"
+last_updated: "2025-07-16"
