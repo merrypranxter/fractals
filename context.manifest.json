@@ -1,0 +1,17 @@
+{
+  "description": "Fractal mathematics reference library for RepoScripter2 generative art context",
+  "files": [
+    "README.md",
+    "AGENTS.md",
+    "01_foundation/fractals_definition.md",
+    "01_foundation/core_math_traits.md",
+    "01_foundation/core_visual_traits.md",
+    "01_foundation/use_cases.md",
+    "01_foundation/why_fractals_matter.md",
+    "01_foundation/neighboring_domains.md",
+    "01_foundation/scope_and_boundaries.md",
+    "repo_seed/fractals.md",
+    "repo_seed/new terms fractal optics.md",
+    "00_meta/repo_manifest.yaml"
+  ]
+}
