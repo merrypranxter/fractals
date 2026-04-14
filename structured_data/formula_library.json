@@ -1,0 +1,161 @@
+{
+  "version": "1.0",
+  "description": "Formula reference library for fractal mathematics. Each entry gives the iteration rule, parameter roles, escape conditions, and GLSL implementation sketch.",
+  "formulas": [
+    {
+      "id": "mandelbrot_standard",
+      "name": "Mandelbrot Set (Standard)",
+      "type": "escape_time_complex",
+      "iteration": "z = z^2 + c",
+      "initial": "z_0 = 0",
+      "variable": "c = pixel coordinate",
+      "escape_condition": "|z| > 2",
+      "smooth_escape": "n - log2(log2(|z|))",
+      "glsl": "z = vec2(z.x*z.x - z.y*z.y + c.x, 2.0*z.x*z.y + c.y);",
+      "notes": "The fundamental escape-time fractal. Try with higher powers (multibrot: z = z^d + c)"
+    },
+    {
+      "id": "julia_standard",
+      "name": "Julia Set (Standard)",
+      "type": "escape_time_complex",
+      "iteration": "z = z^2 + c",
+      "initial": "z_0 = pixel coordinate",
+      "variable": "c = fixed complex parameter",
+      "escape_condition": "|z| > 2",
+      "glsl": "z = vec2(z.x*z.x - z.y*z.y + c.x, 2.0*z.x*z.y + c.y);",
+      "notes": "Same formula as Mandelbrot but z_0 and c roles are swapped"
+    },
+    {
+      "id": "burning_ship",
+      "name": "Burning Ship",
+      "type": "escape_time_complex_modified",
+      "iteration": "z = (|Re(z)| + i|Im(z)|)^2 + c",
+      "initial": "z_0 = 0",
+      "glsl": "z = vec2(abs(z.x), abs(z.y)); z = vec2(z.x*z.x - z.y*z.y + c.x, 2.0*z.x*z.y + c.y);",
+      "notes": "Absolute values before squaring breaks rotational symmetry"
+    },
+    {
+      "id": "celtic",
+      "name": "Celtic Fractal",
+      "type": "escape_time_complex_modified",
+      "iteration": "z = abs(Re(z^2)) + i*Im(z^2) + c",
+      "glsl": "float rx = z.x*z.x - z.y*z.y; z = vec2(abs(rx) + c.x, 2.0*z.x*z.y + c.y);",
+      "notes": "Only real part of z^2 is taken absolute"
+    },
+    {
+      "id": "multibrot",
+      "name": "Multibrot (Power d)",
+      "type": "escape_time_complex",
+      "iteration": "z = z^d + c",
+      "parameter": "d = exponent (integer or non-integer)",
+      "glsl_note": "Use complex power via polar form: r = length(z); theta = atan(z.y, z.x); z = vec2(cos(d*theta), sin(d*theta)) * pow(r, d) + c;",
+      "dimension_note": "Boundary dimension = 2 for all integer d >= 2",
+      "notes": "d=2 gives Mandelbrot. d=3: tricorn-like. d=4: 4-fold. Non-integer d gives continuous morphs."
+    },
+    {
+      "id": "tricorn",
+      "name": "Tricorn (Mandelbar)",
+      "type": "escape_time_complex_modified",
+      "iteration": "z = conj(z)^2 + c  [conjugate of z, then square]",
+      "glsl": "z = vec2(z.x*z.x - z.y*z.y + c.x, -2.0*z.x*z.y + c.y);  // note: -2 from conjugate",
+      "notes": "Three-fold symmetry. Not holomorphic — produces markedly different structure than Mandelbrot"
+    },
+    {
+      "id": "newton_cubic",
+      "name": "Newton Fractal (z^3 - 1)",
+      "type": "root_finding",
+      "iteration": "z = z - (z^3-1)/(3z^2) = (2z^3+1)/(3z^2)",
+      "roots": ["1+0i", "-0.5+0.866i", "-0.5-0.866i"],
+      "glsl_note": "Implement complex division: cdiv(a,b) = vec2(dot(a,b), a.y*b.x-a.x*b.y)/dot(b,b)",
+      "notes": "3-fold symmetry. Generalize to z^n - 1 for n-fold symmetry"
+    },
+    {
+      "id": "mandelbulb_power8",
+      "name": "Mandelbulb (Power 8)",
+      "type": "3d_escape_time",
+      "iteration": "z = r^8 * (sin(8θ)cos(8φ), sin(8θ)sin(8φ), cos(8θ)) + c",
+      "parameters": { "power": 8 },
+      "de_formula": "0.5 * log(r) * r / |dz|   where dz is the derivative tracked alongside z",
+      "glsl_note": "Use r=length(z), theta=acos(z.z/r), phi=atan(z.y,z.x). Update dr=power*r^(power-1)*dr+1. Classic Mandelbulb needs power=8.",
+      "notes": "Power 2 = fuzzy sphere. Power 4 = alien form. Power 8 = classic tentacled bulb."
+    },
+    {
+      "id": "lyapunov",
+      "name": "Lyapunov Exponent (Logistic Map)",
+      "type": "stability_map",
+      "iteration": "x_{n+1} = r * x * (1 - x)",
+      "formula": "λ = (1/N) * Σ log|r*(1-2x)|",
+      "parameters": { "r_A": "x-axis", "r_B": "y-axis", "sequence": "alternating string of A/B" },
+      "coloring": "λ < 0: stable (ordered); λ > 0: chaotic; λ = 0: boundary (fractal)",
+      "notes": "Sequence 'AABAB' = classic Zircon City variant. Range r ∈ [2.5, 4.0] typical."
+    },
+    {
+      "id": "ifs_affine",
+      "name": "IFS Affine Transform",
+      "type": "chaos_game",
+      "formula": "T_i(x,y) = [a b; c d][x; y] + [e; f]  with probability p_i",
+      "convergence": "Any starting point converges to the attractor under random iteration",
+      "coloring_note": "Track which transform was last applied for color; track iteration count for density",
+      "barnsley_fern": {
+        "T0": { "a":0.00, "b":0.00, "c":0.00, "d":0.16, "e":0.0, "f":0.00, "p":0.01 },
+        "T1": { "a":0.85, "b":0.04, "c":-0.04, "d":0.85, "e":0.0, "f":1.60, "p":0.85 },
+        "T2": { "a":0.20, "b":-0.26, "c":0.23, "d":0.22, "e":0.0, "f":1.60, "p":0.07 },
+        "T3": { "a":-0.15, "b":0.28, "c":0.26, "d":0.24, "e":0.0, "f":0.44, "p":0.07 }
+      },
+      "sierpinski": {
+        "T0": { "a":0.5, "b":0.0, "c":0.0, "d":0.5, "e":0.00, "f":0.00, "p":0.33 },
+        "T1": { "a":0.5, "b":0.0, "c":0.0, "d":0.5, "e":0.50, "f":0.00, "p":0.33 },
+        "T2": { "a":0.5, "b":0.0, "c":0.0, "d":0.5, "e":0.25, "f":0.43, "p":0.34 }
+      }
+    },
+    {
+      "id": "fbm_noise",
+      "name": "Fractional Brownian Motion (fBm)",
+      "type": "stochastic_fractal",
+      "formula": "fBm(p) = Σ_{i=0}^{octaves} amplitude^i * noise(p * frequency^i)",
+      "parameters": {
+        "octaves": { "typical": "8", "effect": "detail level" },
+        "lacunarity": { "typical": "2.0", "effect": "frequency multiplier per octave" },
+        "gain": { "typical": "0.5", "effect": "amplitude multiplier per octave (= H - 1, H = Hurst exponent)" }
+      },
+      "glsl": "float fbm(vec2 p) { float v=0.; float a=0.5; for(int i=0;i<8;i++){v+=a*noise(p); p=p*2.+1.7; a*=0.5;} return v; }",
+      "notes": "H=0.5 (gain=0.5) = standard Brownian motion. H>0.5 = smoother, persistent. H<0.5 = rougher, antipersistent."
+    },
+    {
+      "id": "domain_warping",
+      "name": "Domain Warping (Nested fBm)",
+      "type": "procedural_distortion",
+      "formula": "f(p) = fBm(p + fBm(p + fBm(p)))",
+      "depth_variants": [
+        "1-level: fBm(p + offset)",
+        "2-level: fBm(p + fBm(p))",
+        "3-level: fBm(p + fBm(p + fBm(p)))"
+      ],
+      "glsl": "vec2 q = vec2(fbm(p), fbm(p+1.7)); vec2 r = vec2(fbm(p+q), fbm(p+q+1.7)); float v = fbm(p+r);",
+      "notes": "Discovered/popularized by Inigo Quilez. Each nesting level adds more turbulent, organic complexity."
+    },
+    {
+      "id": "distance_estimation",
+      "name": "Distance Estimation (DE) for Mandelbrot",
+      "type": "rendering_technique",
+      "formula": "de = |z| * log(|z|) / (2 * |dz|)   where dz is iterated alongside z as dz = 2*z*dz + 1",
+      "use": "Distance from pixel to fractal boundary. Used for: boundary glow, anti-aliasing, 3D lighting",
+      "glsl": "vec2 dz = vec2(1.0, 0.0); // track derivative\n// Inside loop: dz = 2.0 * cmul(z, dz) + vec2(1.0, 0.0);\n// After escape: float de = sqrt(dot(z,z)/dot(dz,dz)) * log(dot(z,z)) * 0.5;",
+      "notes": "For 3D Mandelbulb: dr = power * r^(power-1) * dr + 1. DE = 0.5 * log(r) * r / dr"
+    },
+    {
+      "id": "orbit_traps",
+      "name": "Orbit Trap Coloring",
+      "type": "coloring_technique",
+      "description": "Track minimum distance from orbit {z_0, z_1, ..., z_n} to a geometric trap object",
+      "trap_types": {
+        "point_trap": "min_n |z_n - trap_point|",
+        "line_trap": "min_n dist(z_n, line)",
+        "circle_trap": "min_n | |z_n - center| - radius |",
+        "cross_trap": "min_n min(|Re(z_n)|, |Im(z_n)|)"
+      },
+      "glsl_cross": "trap = min(trap, min(abs(z.x), abs(z.y)));",
+      "notes": "Produces intricate, organic patterns in the interior. Different traps give radically different aesthetics."
+    }
+  ]
+}

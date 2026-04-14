@@ -1,17 +1,23 @@
 {
-  "description": "Fractal mathematics reference library for RepoScripter2 generative art context",
+  "description": "Fractal mathematics reference library + GLSL shader implementations for RepoScripter2",
   "files": [
     "README.md",
-    "AGENTS.md",
+    "shaders/mandelbrot.frag",
+    "shaders/julia.frag",
+    "shaders/burning_ship.frag",
+    "shaders/newton.frag",
+    "shaders/mandelbulb.frag",
+    "shaders/ifs.frag",
+    "shaders/lyapunov.frag",
+    "05_fractal_families/mandelbrot_set.md",
+    "05_fractal_families/julia_sets.md",
+    "05_fractal_families/mandelbulb_and_mandelbox.md",
+    "structured_data/fractal_master.json",
+    "structured_data/formula_library.json",
     "01_foundation/fractals_definition.md",
     "01_foundation/core_math_traits.md",
     "01_foundation/core_visual_traits.md",
     "01_foundation/use_cases.md",
-    "01_foundation/why_fractals_matter.md",
-    "01_foundation/neighboring_domains.md",
-    "01_foundation/scope_and_boundaries.md",
-    "repo_seed/fractals.md",
-    "repo_seed/new terms fractal optics.md",
-    "00_meta/repo_manifest.yaml"
+    "repo_seed/fractals.md"
   ]
 }

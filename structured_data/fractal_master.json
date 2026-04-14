@@ -1,0 +1,174 @@
+{
+  "version": "1.0",
+  "description": "Machine-readable records for major fractal families. Each entry includes family, generation method, key parameters, visual traits, shader implementation notes, and prompt vocabulary.",
+  "fractals": [
+    {
+      "id": "mandelbrot_set",
+      "name": "Mandelbrot Set",
+      "family": "complex_dynamics",
+      "generation_method": "escape_time",
+      "dimension": { "hausdorff": 2.0, "topological": 1, "note": "Boundary has Hausdorff dimension 2" },
+      "formula": "z_{n+1} = z_n^2 + c, z_0 = 0",
+      "parameters": {
+        "c": { "type": "complex", "role": "pixel_coordinate", "range": "[-2.5 + -1.25i, 1.0 + 1.25i]" },
+        "max_iter": { "type": "int", "typical": 256, "effect": "detail level" },
+        "bailout": { "type": "float", "typical": 4.0, "note": "Escape if |z| > bailout" }
+      },
+      "visual_traits": ["cardioid_main_body", "period_2_bulb", "satellite_minibrots", "filaments", "tendrils", "fjords", "dendrite_regions"],
+      "coloring_methods": ["escape_time_banding", "smooth_escape_time", "orbit_traps", "distance_estimation", "normal_maps", "buddhabrot_density"],
+      "shader_file": "shaders/mandelbrot.frag",
+      "notable_regions": [
+        { "name": "Main Cardioid", "center": [-0.25, 0], "period": 1 },
+        { "name": "Period-2 Bulb", "center": [-1.0, 0], "period": 2 },
+        { "name": "Seahorse Valley", "center": [-0.75, 0.1], "zoom": 50 },
+        { "name": "Elephant Valley", "center": [0.3, 0], "zoom": 20 },
+        { "name": "Deep Spiral (Misiurewicz)", "center": [-0.7435669, 0.1314023], "zoom": 1e6 }
+      ],
+      "prompt_tags": ["mandelbrot", "escape_time", "complex_iteration", "self_similar", "cardioid", "filamentary", "minibrots", "fractal_boundary", "infinite_zoom"],
+      "related": ["julia_sets", "multibrot", "buddhabrot", "burning_ship"]
+    },
+    {
+      "id": "julia_sets",
+      "name": "Julia Sets",
+      "family": "complex_dynamics",
+      "generation_method": "escape_time",
+      "dimension": { "hausdorff": "1.0–2.0 depending on c", "note": "Connected for c in Mandelbrot; Cantor dust otherwise" },
+      "formula": "z_{n+1} = z_n^2 + c, z_0 = pixel",
+      "parameters": {
+        "c": { "type": "complex", "role": "fixed_parameter", "effect": "determines shape of entire fractal" },
+        "z_0": { "type": "complex", "role": "pixel_coordinate" }
+      },
+      "notable_c_values": [
+        { "name": "Rabbit Julia", "c": [-0.12256, 0.74486], "character": "3-lobed, period-3 connected" },
+        { "name": "Basilica", "c": [-0.75, 0.0], "character": "Two symmetric lobes, Fatou boundary" },
+        { "name": "Siegel Disk", "c": [-0.39054, -0.58679], "character": "Quasiperiodic smooth rotation" },
+        { "name": "Airplane", "c": [-1.75488, 0.0], "character": "4-cycle insect-like form" },
+        { "name": "San Marco Dragon", "c": [-0.7269, 0.1889], "character": "Dragon-like with wings" },
+        { "name": "Dendrite", "c": [0.0, 1.0], "character": "Totally disconnected, spindly tree" },
+        { "name": "Douady Rabbit", "c": [-0.12256, 0.74486], "character": "Three-fold lagomorph symmetry" }
+      ],
+      "visual_traits": ["varies_with_c", "connected_or_cantor_dust", "n_fold_symmetry", "fjords", "spirals"],
+      "shader_file": "shaders/julia.frag",
+      "prompt_tags": ["julia_set", "complex_iteration", "connected_set", "cantor_dust", "rabbit_julia", "basilica", "dendrite", "parameter_dependent"],
+      "related": ["mandelbrot_set", "multibrot", "burning_ship"]
+    },
+    {
+      "id": "burning_ship",
+      "name": "Burning Ship Fractal",
+      "family": "complex_dynamics",
+      "generation_method": "escape_time",
+      "formula": "z_{n+1} = (|Re(z_n)| + i|Im(z_n)|)^2 + c",
+      "note": "Absolute values before squaring break complex symmetry",
+      "visual_traits": ["asymmetric", "ship_silhouette", "flame_plumes", "skewed_filaments", "one_sided_structure"],
+      "variants": [
+        { "name": "Standard Burning Ship", "formula": "abs both Re and Im" },
+        { "name": "Celtic", "formula": "abs(Re(z^2)) only" },
+        { "name": "Buffalo", "formula": "abs(Im(z)) only before squaring" },
+        { "name": "Perpendicular Burning Ship", "formula": "alternating abs on Re and Im" }
+      ],
+      "shader_file": "shaders/burning_ship.frag",
+      "prompt_tags": ["burning_ship", "asymmetric_fractal", "flame_fractal", "distorted_mandelbrot", "escape_time"],
+      "related": ["mandelbrot_set", "julia_sets", "multibrot"]
+    },
+    {
+      "id": "newton_fractal",
+      "name": "Newton Fractal",
+      "family": "complex_dynamics",
+      "generation_method": "root_finding",
+      "formula": "z_{n+1} = z_n - f(z_n)/f'(z_n)  [Newton's method for f(z)=z^d-1]",
+      "parameters": {
+        "d": { "type": "int", "typical": 3, "effect": "number of roots, rotational symmetry" },
+        "relax": { "type": "float", "typical": 1.0, "range": [0.5, 2.0], "effect": "damping factor; <1 creates hairy fractal boundaries" }
+      },
+      "visual_traits": ["root_basins", "n_fold_symmetry", "hairy_boundaries", "julia_like_structure_at_boundary"],
+      "coloring_note": "Color = which root pixel converges to; brightness = convergence speed",
+      "shader_file": "shaders/newton.frag",
+      "prompt_tags": ["newton_fractal", "root_basins", "convergence_coloring", "complex_roots", "symmetry_fractal"],
+      "related": ["julia_sets", "mandelbrot_set"]
+    },
+    {
+      "id": "mandelbulb",
+      "name": "Mandelbulb",
+      "family": "3d_fractals",
+      "generation_method": "distance_estimation_3d",
+      "formula": "Spherical-coordinate extension of Mandelbrot to 3D; z = r^p*(sin(p*theta)*cos(p*phi), sin(p*theta)*sin(p*phi), cos(p*theta)) + c",
+      "parameters": {
+        "power": { "type": "float", "typical": 8, "effect": "spikiness; 8=classic bulb, 2=fuzzy sphere" },
+        "max_iter": { "type": "int", "typical": 8, "note": "fewer than 2D due to raymarching cost" }
+      },
+      "visual_traits": ["tentacle_spikes", "bulbous_body", "power_8_symmetry", "fractal_surface_texture", "volumetric_depth"],
+      "render_method": "ray_marching_with_DE",
+      "shader_file": "shaders/mandelbulb.frag",
+      "prompt_tags": ["mandelbulb", "3d_fractal", "raymarching", "tentacles", "cosmic_apple", "spiked_sphere", "fractal_planet"],
+      "related": ["mandelbox", "julia_sets", "mandelbrot_set"]
+    },
+    {
+      "id": "ifs_fractals",
+      "name": "Iterated Function Systems",
+      "family": "ifs_organic",
+      "generation_method": "chaos_game",
+      "formula": "Randomly apply T_i(x,y) = [a b; c d][x; y] + [e; f] with probability p_i",
+      "examples": [
+        { "name": "Sierpinski Triangle", "transforms": 3, "dimension": 1.585 },
+        { "name": "Barnsley Fern", "transforms": 4, "visual": "photorealistic fern" },
+        { "name": "Dragon Curve", "transforms": 2, "dimension": 2.0 },
+        { "name": "Lévy C Curve", "transforms": 2, "dimension": 1.934 },
+        { "name": "Fractal Tree", "transforms": 4, "visual": "binary branching tree" }
+      ],
+      "shader_file": "shaders/ifs.frag",
+      "prompt_tags": ["ifs", "iterated_function_system", "sierpinski", "barnsley_fern", "dragon_curve", "chaos_game", "attractor"],
+      "related": ["l_systems", "fractal_trees"]
+    },
+    {
+      "id": "lyapunov_fractal",
+      "name": "Lyapunov Fractal",
+      "family": "dynamical_systems",
+      "generation_method": "stability_exponent",
+      "formula": "λ = (1/N) * Σ log|r*(1-2x)| where x_{n+1} = r*x*(1-x), r alternates between r_A and r_B",
+      "parameters": {
+        "r_A": { "type": "float", "range": [2.0, 4.0], "role": "x_axis" },
+        "r_B": { "type": "float", "range": [2.0, 4.0], "role": "y_axis" },
+        "sequence": { "type": "string", "examples": ["AB", "AABAB", "AAABBB"], "effect": "fractal structure changes radically with sequence" }
+      },
+      "visual_traits": ["stability_regions_blue", "chaos_regions_red", "sharp_boundary_fractal", "organic_biomorphic", "smooth_interiors"],
+      "note": "The sequence 'AABAB' produces the famous 'Zircon City' variant",
+      "shader_file": "shaders/lyapunov.frag",
+      "prompt_tags": ["lyapunov", "stability_fractal", "logistic_map", "chaos_order_boundary", "biomorphic", "zircon_city"],
+      "related": ["mandelbrot_set", "bifurcation_diagram"]
+    },
+    {
+      "id": "sierpinski_triangle",
+      "name": "Sierpiński Triangle",
+      "family": "classical_geometric",
+      "generation_method": "ifs_or_recursive_subdivision",
+      "dimension": { "hausdorff": 1.585, "topological": 1 },
+      "formula": "Remove center triangle; recurse. Equivalently: IFS with 3 half-scale transforms",
+      "visual_traits": ["self_similar_triangles", "void_holes", "exact_self_similarity", "3_fold_symmetry"],
+      "prompt_tags": ["sierpinski", "triangle_fractal", "self_similar", "3_fold_symmetry", "recursive_subdivision"],
+      "related": ["ifs_fractals", "cantor_set", "sierpinski_carpet"]
+    },
+    {
+      "id": "koch_snowflake",
+      "name": "Koch Snowflake",
+      "family": "classical_geometric",
+      "generation_method": "recursive_subdivision",
+      "dimension": { "hausdorff": 1.262, "topological": 1 },
+      "formula": "Replace each edge segment with 4 segments (tent shape). Repeat.",
+      "visual_traits": ["6_fold_symmetry", "infinite_perimeter", "finite_area", "spiky_boundary", "snowflake"],
+      "prompt_tags": ["koch_snowflake", "koch_curve", "snowflake_fractal", "6_fold_symmetry", "infinite_perimeter", "crystalline"],
+      "related": ["sierpinski_triangle", "dragon_curve"]
+    },
+    {
+      "id": "buddhabrot",
+      "name": "Buddhabrot",
+      "family": "complex_dynamics",
+      "generation_method": "density_histogram",
+      "formula": "Count how many times escaping Mandelbrot orbits pass through each pixel location",
+      "note": "Transpose of Mandelbrot: pixel = z-value, not c-value. Escaping orbits = paths visible.",
+      "visual_traits": ["nebulae_like", "soft_glowing_forms", "meditation_figure_silhouette", "3_channel_rgb_for_exposure_fusion"],
+      "coloring_note": "Use 3 different max_iter values (e.g. 5000/500/50) mapped to R/G/B for full-color Nebulabrot",
+      "prompt_tags": ["buddhabrot", "nebulabrot", "density_fractal", "glowing_orbit_paths", "meditative", "soft_cosmic"],
+      "related": ["mandelbrot_set", "julia_sets"]
+    }
+  ]
+}
